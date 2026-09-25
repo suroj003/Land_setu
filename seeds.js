@@ -7,10 +7,10 @@ const bcrypt = require("bcrypt");
 const pool = require("./db");
 
 const ACCOUNTS = [
-    { username: "admin1", name: "Administrator One", email: "admin1@example.com", role: "admin" },
-    { username: "admin2", name: "Administrator Two", email: "admin2@example.com", role: "admin" },
-    { username: "officer1", name: "Land Officer One", email: "officer1@example.com", role: "officer" },
-    { username: "officer2", name: "Land Officer Two", email: "officer2@example.com", role: "officer" }
+    { username: "admin1", name: "Administrator One", email: "admin1@example.com", role: "Administrator" },
+    { username: "admin2", name: "Administrator Two", email: "admin2@example.com", role: "Administrator" },
+    { username: "officer1", name: "Land Officer One", email: "officer1@example.com", role: "Land Officer" },
+    { username: "officer2", name: "Land Officer Two", email: "officer2@example.com", role: "Land Officer" }
 ];
 
 const PASSWORD = "12345";
