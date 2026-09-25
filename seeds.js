@@ -1,31 +1,42 @@
-// Usage: node seed.js <username> "<Full Name>" <email> <5-digit-password>
-// Creates the first administrator. Run once after importing main_db.sql.
+// One-time helper: creates 2 administrator and 2 land officer demo accounts,
+// all with the password 12345.
+// Run from the project root: node seed_demo_accounts.js
 require("dotenv").config();
 
 const bcrypt = require("bcrypt");
 const pool = require("./db");
 
+const ACCOUNTS = [
+    { username: "admin1", name: "Administrator One", email: "admin1@example.com", role: "admin" },
+    { username: "admin2", name: "Administrator Two", email: "admin2@example.com", role: "admin" },
+    { username: "officer1", name: "Land Officer One", email: "officer1@example.com", role: "officer" },
+    { username: "officer2", name: "Land Officer Two", email: "officer2@example.com", role: "officer" }
+];
+
+const PASSWORD = "12345";
+
 (async () => {
-    const [username, name, email, password] = process.argv.slice(2);
-
-    if (!username || !name || !email || !password) {
-        console.error('Usage: node seed.js <username> "<Full Name>" <email> <5-digit-password>');
-        process.exit(1);
-    }
-    if (!/^\d{5}$/.test(password)) {
-        console.error("Password must be exactly 5 digits.");
-        process.exit(1);
-    }
-
     try {
-        const hash = await bcrypt.hash(password, 10);
-        const [result] = await pool.query(
-            `INSERT INTO users (username, name, email, password_hash, role) VALUES (?, ?, ?, ?, 'admin')`,
-            [username, name, email.toLowerCase(), hash]
-        );
-        console.log(`Admin created with user_id ${result.insertId}`);
+        const hash = await bcrypt.hash(PASSWORD, 10);
+
+        for (const acc of ACCOUNTS) {
+            try {
+                const [result] = await pool.query(
+                    `INSERT INTO users (username, name, email, password_hash, role)
+                     VALUES (?, ?, ?, ?, ?)`,
+                    [acc.username, acc.name, acc.email, hash, acc.role]
+                );
+                console.log(`Created ${acc.role} "${acc.username}" (user_id ${result.insertId})`);
+            } catch (err) {
+                if (err.code === "ER_DUP_ENTRY") {
+                    console.log(`Skipped "${acc.username}" — username or email already exists.`);
+                } else {
+                    throw err;
+                }
+            }
+        }
     } catch (err) {
-        console.error(err.code === "ER_DUP_ENTRY" ? "Username or email already exists." : err.message);
+        console.error(err.message);
         process.exitCode = 1;
     } finally {
         await pool.end();
