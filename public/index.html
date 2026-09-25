@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LandSetu | Land Acquisition Management System</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div id="loginScreen" class="login-screen">
+    <div class="login-card">
+        <div class="brand-logo">LA</div>
+        <h1>LandSetu</h1>
+        <p>Real-Time National Land Acquisition &amp; Management System</p>
+
+        <div class="auth-tabs">
+            <button type="button" id="tabLogin" class="auth-tab active" onclick="showAuthTab('login')">Log in</button>
+            <button type="button" id="tabRegister" class="auth-tab" onclick="showAuthTab('register')">Create account</button>
+        </div>
+
+        <form id="loginForm" onsubmit="event.preventDefault(); login();">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="Enter username" autocomplete="username" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="5-digit password" autocomplete="current-password"
+                inputmode="numeric" pattern="\d{5}" maxlength="5" required>
+
+            <label for="loginRole">Login as</label>
+            <select id="loginRole">
+                <option value="citizen">Citizen</option>
+                <option value="officer">Land Officer</option>
+                <option value="admin">Administrator</option>
+            </select>
+
+            <div id="loginError" class="form-error hidden"></div>
+            <button type="submit" id="loginBtn" class="primary-btn full">Log in</button>
+            <small>Officer and administrator accounts are created by an administrator.</small>
+        </form>
+
+        <form id="registerForm" class="hidden" onsubmit="event.preventDefault(); register();">
+            <label for="regName">Full name</label>
+            <input type="text" id="regName" maxlength="150" autocomplete="name" required>
+
+            <label for="regUsername">Username</label>
+            <input type="text" id="regUsername" maxlength="50" autocomplete="username" required>
+
+            <label for="regEmail">Email</label>
+            <input type="email" id="regEmail" maxlength="150" autocomplete="email" required>
+
+            <div class="two-col">
+                <div>
+                    <label for="regPhone">Phone (optional)</label>
+                    <input type="tel" id="regPhone" maxlength="15" autocomplete="tel">
+                </div>
+                <div>
+                    <label for="regDistrict">District (optional)</label>
+                    <input type="text" id="regDistrict" maxlength="100">
+                </div>
+            </div>
+
+            <label for="regPassword">Password (5 digits)</label>
+            <input type="password" id="regPassword" inputmode="numeric" pattern="\d{5}" maxlength="5"
+                autocomplete="new-password" required>
+
+            <label for="regConfirm">Confirm password</label>
+            <input type="password" id="regConfirm" inputmode="numeric" pattern="\d{5}" maxlength="5"
+                autocomplete="new-password" required>
+
+            <div id="registerError" class="form-error hidden"></div>
+            <button type="submit" id="registerBtn" class="primary-btn full">Create citizen account</button>
+        </form>
+    </div>
+</div>
+
+<div id="app" class="app hidden">
+
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">
+            <div class="brand-logo small">LA</div>
+            <div>
+                <strong>LandSetu</strong>
+                <span>Digital Land System</span>
+            </div>
+        </div>
+
+        <nav id="navigation"></nav>
+
+        <div class="sidebar-bottom">
+            <button class="nav-item logout" onclick="logout()">↪ Logout</button>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <button class="menu-btn" onclick="toggleSidebar()" aria-label="Toggle menu">☰</button>
+
+            <div>
+                <div class="eyebrow">REAL-TIME LAND ACQUISITION</div>
+                <h2 id="pageTitle">Dashboard</h2>
+            </div>
+
+            <div class="top-actions">
+                <button class="icon-btn" onclick="showNotifications()" aria-label="Notifications">
+                    🔔
+                    <span id="notifDot" class="notification-dot hidden"></span>
+                </button>
+
+                <div class="profile" onclick="showPage('profile')">
+                    <div class="avatar" id="avatar">C</div>
+                    <div>
+                        <strong id="profileName">User</strong>
+                        <span id="profileRole">Citizen</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section id="content" class="content"></section>
+    </main>
+</div>
+
+<div id="modal" class="modal hidden">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
+        <div id="modalContent"></div>
+    </div>
+</div>
+
+<div id="toasts" class="toasts" aria-live="polite"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
